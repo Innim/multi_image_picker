@@ -651,6 +651,9 @@ public class MultiImagePickerPlugin implements
             List<Uri> photos = data.getParcelableArrayListExtra(Define.INTENT_PATH);
             List<HashMap<String, Object>> result = new ArrayList<>(photos.size());
             for (Uri uri : photos) {
+                if (uri == null)
+                    continue;
+
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("identifier", uri.toString());
                 InputStream is = null;
