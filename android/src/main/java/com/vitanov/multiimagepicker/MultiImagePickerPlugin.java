@@ -542,7 +542,7 @@ public class MultiImagePickerPlugin implements
                 .setCamera(enableCamera)
                 .setRequestCode(REQUEST_CODE_CHOOSE)
                 .setSelectedImages(selectedUris)
-                .exceptGif(true)
+                .exceptGif(false)
                 .setIsUseDetailView(useDetailsView.equals("true"))
                 .setReachLimitAutomaticClose(autoCloseOnSelectionLimit.equals("true"))
                 .isStartInAllView(startInAllView.equals("true"));
@@ -613,6 +613,9 @@ public class MultiImagePickerPlugin implements
             }
             List<HashMap<String, Object>> result = new ArrayList<>(photos.size());
             for (Uri uri : photos) {
+                if (uri == null)
+                    continue;
+
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("identifier", uri.toString());
                 InputStream is = null;
