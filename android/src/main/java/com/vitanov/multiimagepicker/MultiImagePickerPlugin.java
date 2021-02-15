@@ -234,6 +234,9 @@ public class MultiImagePickerPlugin implements
             }
 
             assert bytesArray != null;
+            if(bytesArray == null){
+                return null;
+            }
             final ByteBuffer buffer = ByteBuffer.allocateDirect(bytesArray.length);
             buffer.put(bytesArray);
             return buffer;
@@ -243,7 +246,9 @@ public class MultiImagePickerPlugin implements
         protected void onPostExecute(ByteBuffer buffer) {
             super.onPostExecute(buffer);
             this.messenger.send("multi_image_picker/image/" + this.identifier + ".original", buffer);
-            buffer.clear();
+            if(buffer != null) {
+                buffer.clear();
+            }
         }
     }
 
@@ -388,8 +393,6 @@ public class MultiImagePickerPlugin implements
                     ExifInterface.TAG_GPS_DEST_DISTANCE_REF,
                     ExifInterface.TAG_GPS_DEST_LATITUDE_REF,
                     ExifInterface.TAG_GPS_DEST_LONGITUDE_REF,
-                    ExifInterface.TAG_GPS_DOP,
-                    ExifInterface.TAG_GPS_IMG_DIRECTION,
                     ExifInterface.TAG_GPS_IMG_DIRECTION_REF,
                     ExifInterface.TAG_GPS_MAP_DATUM,
                     ExifInterface.TAG_GPS_MEASURE_MODE,
@@ -439,6 +442,8 @@ public class MultiImagePickerPlugin implements
                     ExifInterface.TAG_GPS_DEST_LATITUDE,
                     ExifInterface.TAG_GPS_DEST_LONGITUDE,
                     ExifInterface.TAG_GPS_DIFFERENTIAL,
+                    ExifInterface.TAG_GPS_DOP,
+                    ExifInterface.TAG_GPS_IMG_DIRECTION,
                     ExifInterface.TAG_GPS_SPEED,
                     ExifInterface.TAG_GPS_TRACK,
                     ExifInterface.TAG_JPEG_INTERCHANGE_FORMAT,
@@ -613,9 +618,9 @@ public class MultiImagePickerPlugin implements
             }
             List<HashMap<String, Object>> result = new ArrayList<>(photos.size());
             for (Uri uri : photos) {
-                if (uri == null)
+                if(uri == null){
                     continue;
-
+                }
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("identifier", uri.toString());
                 InputStream is = null;
